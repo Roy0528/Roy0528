@@ -25,6 +25,13 @@ jobs:
         with:
           python-version: "3.12"
 
+      # 暫時的檢查：找出 private repo 沒被算進去的原因，查完就拿掉
+      - name: Diagnose stats token
+        continue-on-error: true
+        env:
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
+        run: python scripts/diagnose_token.py --user "${{ github.repository_owner }}"
+
       - name: Generate stats cards
         env:
           STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
