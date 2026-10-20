@@ -10,8 +10,8 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=py,cs,js,dotnet,vue,mysql,postgres,git&theme=dark" />
-    <img src="https://skillicons.dev/icons?i=py,cs,js,dotnet,vue,mysql,postgres,git&theme=light" alt="Python, C#, JavaScript, .NET, Vue, MySQL, PostgreSQL, Git" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=py%2Ccs%2Cjs%2Cdotnet%2Cvue%2Cmysql%2Cpostgres%2Cgit&theme=dark" />
+    <img src="https://skillicons.dev/icons?i=py%2Ccs%2Cjs%2Cdotnet%2Cvue%2Cmysql%2Cpostgres%2Cgit&theme=light" alt="Python, C#, JavaScript, .NET, Vue, MySQL, PostgreSQL, Git" />
   </picture>
 </p>
 
