@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
+  <title id="title">RoyWu</title>
+  <desc id="desc">I/O Psychology · National Taiwan University</desc>
+  <defs>
+    <linearGradient id="flow" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse" spreadMethod="reflect">
+      <stop offset="0" stop-color="#6a11cb"/>
+      <stop offset="0.5" stop-color="#2575fc"/>
+      <stop offset="1" stop-color="#00c9a7"/>
+      <animateTransform attributeName="gradientTransform" type="translate" values="-600 0; 600 0; -600 0" dur="10s" repeatCount="indefinite"/>
+    </linearGradient>
+    <!-- 底部是透明的波浪邊，深色、淺色主題都不用另外做一版 -->
+    <clipPath id="shape">
+      <path d="M0,0 H1200 V196 C1050,236 900,158 750,190 C600,222 450,246 300,206 C190,177 90,186 0,204 Z"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#shape)">
+    <rect width="1200" height="260" fill="url(#flow)"/>
+    <g opacity="0.14" fill="#ffffff">
+      <!-- 波長 600、平移 1200（兩個波長），循環接縫才不會跳 -->
+      <path d="M0,150 Q150,110 300,150 T600,150 T900,150 T1200,150 T1500,150 T1800,150 T2100,150 T2400,150 V260 H0 Z">
+        <animateTransform attributeName="transform" type="translate" values="0 0; -1200 0" dur="14s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <g opacity="0.10" fill="#ffffff">
+      <path d="M0,175 Q150,205 300,175 T600,175 T900,175 T1200,175 T1500,175 T1800,175 T2100,175 T2400,175 V260 H0 Z">
+        <animateTransform attributeName="transform" type="translate" values="-1200 0; 0 0" dur="18s" repeatCount="indefinite"/>
+      </path>
+    </g>
+  </g>
+
+  <style>
+    .name { font: 800 84px "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif; letter-spacing: 4px; fill: #ffffff; }
+    .sub  { font: 500 26px "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif; letter-spacing: 1.5px; fill: #ffffff; fill-opacity: 0.92; }
+    .rise { opacity: 0; animation: rise 1.2s ease-out forwards; }
+    .rise.late { animation-delay: 0.45s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+  <text class="name rise" x="600" y="112" text-anchor="middle">RoyWu</text>
+  <text class="sub rise late" x="600" y="160" text-anchor="middle">I/O Psychology · National Taiwan University</text>
+</svg>
