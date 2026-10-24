@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="195" viewBox="0 0 420 195" role="img" aria-label="RoyWu&#x27;s GitHub Stats">
+  <style>
+    text { font-family: "Segoe UI", Ubuntu, "Helvetica Neue", Arial, sans-serif; }
+    .title { font-size: 17px; font-weight: 600; fill: #2f81f7; }
+    .label { font-size: 14px; fill: #e6edf3; }
+    .value { font-size: 14px; font-weight: 700; fill: #e6edf3; }
+    .muted { font-size: 12px; fill: #7d8590; }
+    .big { font-size: 28px; font-weight: 700; fill: #e6edf3; }
+    .fire { font-size: 14px; font-weight: 700; fill: #fb8f44; }
+    .fade { opacity: 0; animation: fade 0.6s ease-out forwards; }
+    @keyframes fade { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+  </style>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6a11cb"/>
+      <stop offset="0.5" stop-color="#2575fc"/>
+      <stop offset="1" stop-color="#00c9a7"/>
+    </linearGradient>
+  </defs>
+  <rect x="0.5" y="0.5" width="419" height="194" rx="6" fill="#161b22" stroke="#30363d"/>
+  <text x="24" y="38" class="title">RoyWu's GitHub Stats</text>
+  <g class="fade" style="animation-delay:0.15s"><text x="24" y="78" class="label">🕓  Commits</text><text x="250" y="78" class="value" text-anchor="end">396</text></g>
+  <g class="fade" style="animation-delay:0.27s"><text x="24" y="106" class="label">🔀  Pull Requests</text><text x="250" y="106" class="value" text-anchor="end">1</text></g>
+  <g class="fade" style="animation-delay:0.39s"><text x="24" y="134" class="label">📦  Repositories</text><text x="250" y="134" class="value" text-anchor="end">21</text></g>
+  <g class="fade" style="animation-delay:0.51s"><text x="24" y="162" class="label">🗓️  Member Since</text><text x="250" y="162" class="value" text-anchor="end">2021</text></g>
+  <circle cx="338" cy="112" r="46" fill="none" stroke="#30363d" stroke-width="8"/>
+  <circle cx="338" cy="112" r="46" fill="none" stroke="url(#brand)" stroke-width="8" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="0" transform="rotate(-90 338 112)">
+    <animate attributeName="stroke-dashoffset" values="289.03;0" dur="1.4s" calcMode="spline" keySplines="0.3 0 0.2 1" keyTimes="0;1"/>
+  </circle>
+
+  <text x="338" y="120" class="big" text-anchor="middle">286</text>
+  <text x="338" y="140" class="muted" text-anchor="middle">in 2026</text>
+</svg>

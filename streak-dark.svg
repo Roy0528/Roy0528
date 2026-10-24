@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="185" viewBox="0 0 850 185" role="img" aria-label="Contribution Streak">
+  <style>
+    text { font-family: "Segoe UI", Ubuntu, "Helvetica Neue", Arial, sans-serif; }
+    .title { font-size: 17px; font-weight: 600; fill: #2f81f7; }
+    .label { font-size: 14px; fill: #e6edf3; }
+    .value { font-size: 14px; font-weight: 700; fill: #e6edf3; }
+    .muted { font-size: 12px; fill: #7d8590; }
+    .big { font-size: 28px; font-weight: 700; fill: #e6edf3; }
+    .fire { font-size: 14px; font-weight: 700; fill: #fb8f44; }
+    .fade { opacity: 0; animation: fade 0.6s ease-out forwards; }
+    @keyframes fade { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+  </style>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6a11cb"/>
+      <stop offset="0.5" stop-color="#2575fc"/>
+      <stop offset="1" stop-color="#00c9a7"/>
+    </linearGradient>
+  </defs>
+  <rect x="0.5" y="0.5" width="849" height="184" rx="6" fill="#161b22" stroke="#30363d"/>
+  <line x1="283" y1="32" x2="283" y2="153" stroke="#30363d"/>
+  <line x1="567" y1="32" x2="567" y2="153" stroke="#30363d"/>
+  <g class="fade" style="animation-delay:0.15s"><text x="142" y="86" class="big" text-anchor="middle">400</text><text x="142" y="118" class="label" text-anchor="middle">Total Contributions</text><text x="142" y="142" class="muted" text-anchor="middle">Mar 3, 2021 – Present</text></g>
+  <circle cx="425" cy="78" r="42" fill="none" stroke="#30363d" stroke-width="8"/>
+  <circle cx="425" cy="78" r="42" fill="none" stroke="#fb8f44" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.89" stroke-dashoffset="0" transform="rotate(-90 425 78)">
+    <animate attributeName="stroke-dashoffset" values="263.89;0" dur="1.4s" calcMode="spline" keySplines="0.3 0 0.2 1" keyTimes="0;1"/>
+  </circle>
+
+  <circle cx="425" cy="36" r="13" fill="#161b22"/>
+  <text x="425" y="43" font-size="18" text-anchor="middle">🔥</text>
+  <text x="425" y="88" class="big" text-anchor="middle">5</text>
+  <text x="425" y="146" class="fire" text-anchor="middle">Current Streak</text>
+  <text x="425" y="166" class="muted" text-anchor="middle">Oct 19 – Oct 23</text>
+  <g class="fade" style="animation-delay:0.3s"><text x="708" y="86" class="big" text-anchor="middle">5</text><text x="708" y="118" class="label" text-anchor="middle">Longest Streak</text><text x="708" y="142" class="muted" text-anchor="middle">Dec 18, 2023 – Dec 22, 2023</text></g>
+</svg>

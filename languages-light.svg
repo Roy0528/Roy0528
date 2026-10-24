@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="195" viewBox="0 0 420 195" role="img" aria-label="Top Languages">
+  <style>
+    text { font-family: "Segoe UI", Ubuntu, "Helvetica Neue", Arial, sans-serif; }
+    .title { font-size: 17px; font-weight: 600; fill: #0969da; }
+    .label { font-size: 14px; fill: #1f2328; }
+    .value { font-size: 14px; font-weight: 700; fill: #1f2328; }
+    .muted { font-size: 12px; fill: #656d76; }
+    .big { font-size: 28px; font-weight: 700; fill: #1f2328; }
+    .fire { font-size: 14px; font-weight: 700; fill: #bc4c00; }
+    .fade { opacity: 0; animation: fade 0.6s ease-out forwards; }
+    @keyframes fade { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+  </style>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6a11cb"/>
+      <stop offset="0.5" stop-color="#2575fc"/>
+      <stop offset="1" stop-color="#00c9a7"/>
+    </linearGradient>
+  </defs>
+  <rect x="0.5" y="0.5" width="419" height="194" rx="6" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="24" y="38" class="title">Top Languages</text>
+  <clipPath id="bar"><rect x="24" y="58" width="372" height="10" rx="5"/></clipPath>
+  <g clip-path="url(#bar)"><rect x="24" y="58" width="372" height="10" fill="#eaeef2"/>
+    <rect x="24.00" y="58" width="129.59" height="10" fill="#3572A5"/>
+    <rect x="153.59" y="58" width="113.33" height="10" fill="#f1e05a"/>
+    <rect x="266.92" y="58" width="75.22" height="10" fill="#41b883"/>
+    <rect x="342.14" y="58" width="27.47" height="10" fill="#3178c6"/>
+    <rect x="369.60" y="58" width="26.04" height="10" fill="#7355dd"/>
+  </g>
+  <g class="fade" style="animation-delay:0.15s"><circle cx="29" cy="97" r="5" fill="#3572A5"/><text x="40" y="102" class="label">Python <tspan class="muted">34.8%</tspan></text></g>
+  <g class="fade" style="animation-delay:0.25s"><circle cx="219" cy="97" r="5" fill="#f1e05a"/><text x="230" y="102" class="label">JavaScript <tspan class="muted">30.5%</tspan></text></g>
+  <g class="fade" style="animation-delay:0.35s"><circle cx="29" cy="127" r="5" fill="#41b883"/><text x="40" y="132" class="label">Vue <tspan class="muted">20.2%</tspan></text></g>
+  <g class="fade" style="animation-delay:0.45s"><circle cx="219" cy="127" r="5" fill="#3178c6"/><text x="230" y="132" class="label">TypeScript <tspan class="muted">7.4%</tspan></text></g>
+  <g class="fade" style="animation-delay:0.55s"><circle cx="29" cy="157" r="5" fill="#7355dd"/><text x="40" y="162" class="label">C# <tspan class="muted">7.0%</tspan></text></g>
+</svg>
