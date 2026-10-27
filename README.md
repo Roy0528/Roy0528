@@ -1,12 +1,8 @@
 <p align="center">
-  <img src="./assets/banner.svg" width="100%" alt="RoyWu · I/O Psychology · National Taiwan University" />
+  <img src="./assets/banner.svg" width="100%" alt="RoyWu · Master's in I/O Psychology · National Taiwan University · Based in Taiwan" />
 </p>
 
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=24&duration=2600&pause=1000&color=2F81F7&center=true&vCenter=true&width=620&height=50&lines=Hi%2C+I'm+Roy+%F0%9F%91%8B;Master's+in+I%2FO+Psychology;National+Taiwan+University;Based+in+Taiwan" alt="Hi, I'm Roy · Master's in I/O Psychology · National Taiwan University · Based in Taiwan" />
-</p>
-
-## 🛠️ Tech Stack
+## Tech stack
 
 <p align="center">
   <picture>
@@ -15,7 +11,7 @@
   </picture>
 </p>
 
-## 📊 GitHub Stats
+## GitHub stats
 
 <p align="center">
   <picture>
@@ -35,7 +31,7 @@
   </picture>
 </p>
 
-## 🐍 Contribution Snake
+## Contribution snake
 
 <p align="center">
   <picture>

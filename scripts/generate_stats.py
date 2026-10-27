@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import sys
 import urllib.request
@@ -25,26 +24,33 @@ GRAPHQL_URL = "https://api.github.com/graphql"
 EXCLUDED_LANGUAGES = {"CSS", "SCSS", "HTML", "Batchfile", "Procfile"}
 TOP_LANGUAGE_COUNT = 5
 FALLBACK_LANGUAGE_COLOR = "#8b949e"
-BRAND_GRADIENT = ("#6a11cb", "#2575fc", "#00c9a7")
+LANGUAGE_BAR_CELLS = 20
+LANGUAGE_NAME_LIMIT = 13
 
+# README 圖片裡的 SVG 不能載入網路字型，只能交給讀者系統上的等寬字型
+MONO_FONT = 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, "Cascadia Code", Consolas, "Liberation Mono", monospace'
+# 等寬字型的字寬約為字級的 0.6 倍，用來估算點線引導線要畫多長
+MONO_ADVANCE = 0.6
+
+# 每組文字色對背景的對比度都至少 4.5:1
 THEMES = {
     "light": {
-        "bg": "#ffffff",
-        "border": "#d0d7de",
-        "title": "#0969da",
+        "bg": "#f6f8fa",
+        "border": "#d1d9e0",
         "text": "#1f2328",
-        "muted": "#656d76",
-        "track": "#eaeef2",
+        "muted": "#59636e",
+        "accent": "#1a7f37",
+        "track": "#dde3e9",
         "fire": "#bc4c00",
     },
     "dark": {
-        "bg": "#161b22",
-        "border": "#30363d",
-        "title": "#2f81f7",
+        "bg": "#0b0f14",
+        "border": "#262f3a",
         "text": "#e6edf3",
-        "muted": "#7d8590",
-        "track": "#30363d",
-        "fire": "#fb8f44",
+        "muted": "#8b98a5",
+        "accent": "#3fb950",
+        "track": "#1f2730",
+        "fire": "#f0883e",
     },
 }
 
@@ -351,139 +357,134 @@ def format_range(streak: Streak, current_year: int) -> str:
     return f"{format_date(streak.start, with_year)} – {format_date(streak.end, with_year)}"
 
 
-def svg_document(width: int, height: int, theme: dict[str, str], label: str, body: str) -> str:
-    """包上共用的 SVG 外框、字型與動畫樣式。
+def text_width(text: str, font_size: int) -> float:
+    """估算一段等寬字的寬度。"""
+    return len(text) * font_size * MONO_ADVANCE
+
+
+def truncate(text: str, limit: int) -> str:
+    """超過字數就截斷並補上刪節號。"""
+    return text if len(text) <= limit else text[: limit - 1] + "…"
+
+
+def svg_document(width: int, height: int, theme: dict[str, str], label: str, command: str, body: str) -> str:
+    """包上共用的終端機外框、左上角提示列、字型與動畫樣式。
 
     Args:
         width: 寬度。
         height: 高度。
         theme: THEMES 裡的配色。
         label: 給螢幕閱讀器的說明。
+        command: 提示列上顯示的指令。
         body: 卡片內容。
 
     Returns:
         完整的 SVG 字串。
     """
-    first, middle, last = BRAND_GRADIENT
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(label)}">
   <style>
-    text {{ font-family: "Segoe UI", Ubuntu, "Helvetica Neue", Arial, sans-serif; }}
-    .title {{ font-size: 17px; font-weight: 600; fill: {theme["title"]}; }}
+    text {{ font-family: {MONO_FONT}; font-variant-numeric: tabular-nums; }}
+    .prompt {{ font-size: 13px; fill: {theme["muted"]}; }}
     .label {{ font-size: 14px; fill: {theme["text"]}; }}
     .value {{ font-size: 14px; font-weight: 700; fill: {theme["text"]}; }}
+    .small {{ font-size: 13px; fill: {theme["text"]}; }}
     .muted {{ font-size: 12px; fill: {theme["muted"]}; }}
-    .big {{ font-size: 28px; font-weight: 700; fill: {theme["text"]}; }}
-    .fire {{ font-size: 14px; font-weight: 700; fill: {theme["fire"]}; }}
-    .fade {{ opacity: 0; animation: fade 0.6s ease-out forwards; }}
-    @keyframes fade {{ from {{ opacity: 0; transform: translateX(-6px); }} to {{ opacity: 1; transform: translateX(0); }} }}
+    .big {{ font-size: 38px; font-weight: 700; fill: {theme["text"]}; }}
+    .accent {{ fill: {theme["accent"]}; }}
+    .fire {{ fill: {theme["fire"]}; }}
+    .chevron {{ fill: none; stroke: {theme["accent"]}; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }}
+    .leader {{ stroke: {theme["muted"]}; stroke-opacity: 0.45; stroke-width: 1.5; stroke-dasharray: 0 6; stroke-linecap: round; }}
+    .divider {{ stroke: {theme["border"]}; }}
+    /* fill-mode both：延遲期間保持隱藏，不支援動畫的環境則直接顯示 */
+    .fade {{ animation: fade 0.5s ease-out both; }}
+    @keyframes fade {{ from {{ opacity: 0; transform: translateY(4px); }} to {{ opacity: 1; transform: none; }} }}
+    @media (prefers-reduced-motion: reduce) {{ .fade {{ animation: none; }} }}
   </style>
-  <defs>
-    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="{first}"/>
-      <stop offset="0.5" stop-color="{middle}"/>
-      <stop offset="1" stop-color="{last}"/>
-    </linearGradient>
-  </defs>
-  <rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="6" fill="{theme["bg"]}" stroke="{theme["border"]}"/>
+  <rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1}" rx="10" fill="{theme["bg"]}" stroke="{theme["border"]}"/>
+  <path class="chevron" d="M24 27.5l5 4.5-5 4.5"/>
+  <text x="38" y="37" class="prompt">{escape(command)}</text>
 {body}
 </svg>
 """
 
 
-def ring(cx: int, cy: int, radius: int, stroke: str, track: str) -> str:
-    """畫一個會從頂端開始描出來的圓環。
-
-    初始值設成畫滿，不支援 SMIL 動畫的環境也會看到完整圓環。
-    """
-    circumference = 2 * math.pi * radius
-    return (
-        f'  <circle cx="{cx}" cy="{cy}" r="{radius}" fill="none" stroke="{track}" stroke-width="8"/>\n'
-        f'  <circle cx="{cx}" cy="{cy}" r="{radius}" fill="none" stroke="{stroke}" stroke-width="8" '
-        f'stroke-linecap="round" stroke-dasharray="{circumference:.2f}" stroke-dashoffset="0" '
-        f'transform="rotate(-90 {cx} {cy})">\n'
-        f'    <animate attributeName="stroke-dashoffset" values="{circumference:.2f};0" dur="1.4s" '
-        f'calcMode="spline" keySplines="0.3 0 0.2 1" keyTimes="0;1"/>\n'
-        f"  </circle>\n"
-    )
-
-
 def render_stats_card(stats: ProfileStats, theme: dict[str, str]) -> str:
-    """總覽卡片：commit、PR、repo、加入年份，右邊圓環是今年的貢獻數。"""
+    """總覽卡片：左邊用點線對齊 commit、PR、repo、加入年份，右邊是今年的貢獻數。"""
     rows = [
-        ("🕓", "Commits", format_number(stats.commits)),
-        ("🔀", "Pull Requests", format_number(stats.pull_requests)),
-        ("📦", "Repositories", format_number(stats.repositories)),
-        ("🗓️", "Member Since", str(stats.member_since)),
+        ("commits", format_number(stats.commits)),
+        ("pulls", format_number(stats.pull_requests)),
+        ("repos", format_number(stats.repositories)),
+        ("since", str(stats.member_since)),
     ]
-    body = [f'  <text x="24" y="38" class="title">{escape(stats.display_name)}\'s GitHub Stats</text>']
-    for index, (icon, label, value) in enumerate(rows):
-        y = 78 + index * 28
-        delay = 0.15 + index * 0.12
+    label_x, value_x = 24, 250
+    body = []
+    for index, (label, value) in enumerate(rows):
+        y = 76 + index * 28
+        leader_start = label_x + text_width(label, 14) + 10
+        leader_end = value_x - text_width(value, 14) - 10
+        delay = 0.1 + index * 0.1
         body.append(
             f'  <g class="fade" style="animation-delay:{delay:.2f}s">'
-            f'<text x="24" y="{y}" class="label">{icon}  {label}</text>'
-            f'<text x="250" y="{y}" class="value" text-anchor="end">{value}</text></g>'
+            f'<text x="{label_x}" y="{y}" class="label">{label}</text>'
+            f'<line x1="{leader_start:.1f}" y1="{y - 4}" x2="{leader_end:.1f}" y2="{y - 4}" class="leader"/>'
+            f'<text x="{value_x}" y="{y}" class="value" text-anchor="end">{value}</text></g>'
         )
-    body.append(ring(338, 112, 46, "url(#brand)", theme["track"]))
-    body.append(f'  <text x="338" y="120" class="big" text-anchor="middle">{format_number(stats.contributions_this_year)}</text>')
-    body.append(f'  <text x="338" y="140" class="muted" text-anchor="middle">in {stats.current_year}</text>')
-    return svg_document(420, 195, theme, f"{stats.display_name}'s GitHub Stats", "\n".join(body))
+    body.append('  <line x1="280.5" y1="60" x2="280.5" y2="168" class="divider"/>')
+    body.append(
+        '  <g class="fade" style="animation-delay:0.50s">'
+        f'<text x="300" y="112" class="big accent">{format_number(stats.contributions_this_year)}</text>'
+        '<text x="300" y="138" class="muted">contributions</text>'
+        f'<text x="300" y="156" class="muted">in {stats.current_year}</text></g>'
+    )
+    return svg_document(420, 195, theme, f"{stats.display_name}'s GitHub Stats", "git stats --all", "\n".join(body))
 
 
 def render_languages_card(languages: list[Language], theme: dict[str, str]) -> str:
-    """常用語言卡片：上面一條比例長條，下面兩欄圖例。"""
-    bar_x, bar_y, bar_width, bar_height = 24, 58, 372, 10
-    body = [
-        '  <text x="24" y="38" class="title">Top Languages</text>',
-        f'  <clipPath id="bar"><rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" rx="5"/></clipPath>',
-        f'  <g clip-path="url(#bar)"><rect x="{bar_x}" y="{bar_y}" width="{bar_width}" height="{bar_height}" fill="{theme["track"]}"/>',
-    ]
-    offset = float(bar_x)
-    for language in languages:
-        width = language.ratio * bar_width
-        body.append(f'    <rect x="{offset:.2f}" y="{bar_y}" width="{width:.2f}" height="{bar_height}" fill="{language.color}"/>')
-        offset += width
-    body.append("  </g>")
-
+    """常用語言卡片：每個語言一列，用一排方塊表示比例，一格是 5%。"""
+    name_x, cells_x, percent_x = 24, 152, 396
+    body = []
     if not languages:
-        body.append('  <text x="24" y="104" class="muted">No language data yet</text>')
+        body.append('  <text x="24" y="76" class="muted">No language data yet</text>')
     for index, language in enumerate(languages):
-        x = 24 + (index % 2) * 190
-        y = 102 + (index // 2) * 30
-        delay = 0.15 + index * 0.1
+        y = 72 + index * 24
+        filled = max(1, round(language.ratio * LANGUAGE_BAR_CELLS))
+        cells = "".join(
+            f'<rect x="{cells_x + cell * 10}" y="{y - 10}" width="8" height="11" rx="1.5" '
+            f'fill="{language.color if cell < filled else theme["track"]}"/>'
+            for cell in range(LANGUAGE_BAR_CELLS)
+        )
+        delay = 0.1 + index * 0.08
         body.append(
             f'  <g class="fade" style="animation-delay:{delay:.2f}s">'
-            f'<circle cx="{x + 5}" cy="{y - 5}" r="5" fill="{language.color}"/>'
-            f'<text x="{x + 16}" y="{y}" class="label">{escape(language.name)} '
-            f'<tspan class="muted">{language.ratio * 100:.1f}%</tspan></text></g>'
+            f'<text x="{name_x}" y="{y}" class="small">{escape(truncate(language.name, LANGUAGE_NAME_LIMIT))}</text>'
+            f"{cells}"
+            f'<text x="{percent_x}" y="{y}" class="muted" text-anchor="end">{language.ratio * 100:.1f}%</text></g>'
         )
-    return svg_document(420, 195, theme, "Top Languages", "\n".join(body))
+    command = f"linguist --top {TOP_LANGUAGE_COUNT}"
+    return svg_document(420, 195, theme, "Top Languages", command, "\n".join(body))
 
 
 def render_streak_card(stats: ProfileStats, theme: dict[str, str]) -> str:
-    """連續貢獻卡片：總貢獻、目前連續天數、最長連續天數三欄。"""
+    """連續貢獻卡片：總貢獻、目前連續天數、最長連續天數三欄，目前連續用強調色。"""
     since = format_date(stats.first_contribution) if stats.first_contribution else "—"
-    left, middle, right = 142, 425, 708
-    body = [
-        f'  <line x1="283" y1="32" x2="283" y2="153" stroke="{theme["border"]}"/>',
-        f'  <line x1="567" y1="32" x2="567" y2="153" stroke="{theme["border"]}"/>',
-        f'  <g class="fade" style="animation-delay:0.15s">'
-        f'<text x="{left}" y="86" class="big" text-anchor="middle">{format_number(stats.contributions_total)}</text>'
-        f'<text x="{left}" y="118" class="label" text-anchor="middle">Total Contributions</text>'
-        f'<text x="{left}" y="142" class="muted" text-anchor="middle">{since} – Present</text></g>',
-        ring(middle, 78, 42, theme["fire"], theme["track"]),
-        # 火焰底下墊一個背景色圓點，視覺上把圓環頂端切開
-        f'  <circle cx="{middle}" cy="36" r="13" fill="{theme["bg"]}"/>',
-        f'  <text x="{middle}" y="43" font-size="18" text-anchor="middle">🔥</text>',
-        f'  <text x="{middle}" y="88" class="big" text-anchor="middle">{stats.current_streak.length}</text>',
-        f'  <text x="{middle}" y="146" class="fire" text-anchor="middle">Current Streak</text>',
-        f'  <text x="{middle}" y="166" class="muted" text-anchor="middle">{format_range(stats.current_streak, stats.current_year)}</text>',
-        f'  <g class="fade" style="animation-delay:0.3s">'
-        f'<text x="{right}" y="86" class="big" text-anchor="middle">{stats.longest_streak.length}</text>'
-        f'<text x="{right}" y="118" class="label" text-anchor="middle">Longest Streak</text>'
-        f'<text x="{right}" y="142" class="muted" text-anchor="middle">{format_range(stats.longest_streak, stats.current_year)}</text></g>',
+    columns = [
+        (142, format_number(stats.contributions_total), "total contributions", f"{since} – present", ""),
+        (425, str(stats.current_streak.length), "current streak", format_range(stats.current_streak, stats.current_year), " fire"),
+        (708, str(stats.longest_streak.length), "longest streak", format_range(stats.longest_streak, stats.current_year), ""),
     ]
-    return svg_document(850, 185, theme, "Contribution Streak", "\n".join(body))
+    body = [
+        '  <line x1="283.5" y1="58" x2="283.5" y2="148" class="divider"/>',
+        '  <line x1="567.5" y1="58" x2="567.5" y2="148" class="divider"/>',
+    ]
+    for index, (x, value, label, period, tone) in enumerate(columns):
+        delay = 0.1 + index * 0.15
+        body.append(
+            f'  <g class="fade" style="animation-delay:{delay:.2f}s" text-anchor="middle">'
+            f'<text x="{x}" y="98" class="big{tone}">{value}</text>'
+            f'<text x="{x}" y="124" class="small{tone}">{label}</text>'
+            f'<text x="{x}" y="146" class="muted">{escape(period)}</text></g>'
+        )
+    return svg_document(850, 170, theme, "Contribution Streak", "git streak", "\n".join(body))
 
 
 def write_cards(stats: ProfileStats, out_dir: Path) -> list[Path]:
