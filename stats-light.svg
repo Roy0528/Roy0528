@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="195" viewBox="0 0 420 195" role="img" aria-label="RoyWu&#x27;s GitHub Stats">
+  <style>
+    text { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, "Cascadia Code", Consolas, "Liberation Mono", monospace; font-variant-numeric: tabular-nums; }
+    .prompt { font-size: 13px; fill: #59636e; }
+    .label { font-size: 14px; fill: #1f2328; }
+    .value { font-size: 14px; font-weight: 700; fill: #1f2328; }
+    .small { font-size: 13px; fill: #1f2328; }
+    .muted { font-size: 12px; fill: #59636e; }
+    .big { font-size: 38px; font-weight: 700; fill: #1f2328; }
+    .accent { fill: #1a7f37; }
+    .fire { fill: #bc4c00; }
+    .chevron { fill: none; stroke: #1a7f37; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .leader { stroke: #59636e; stroke-opacity: 0.45; stroke-width: 1.5; stroke-dasharray: 0 6; stroke-linecap: round; }
+    .divider { stroke: #d1d9e0; }
+    /* fill-mode both：延遲期間保持隱藏，不支援動畫的環境則直接顯示 */
+    .fade { animation: fade 0.5s ease-out both; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .fade { animation: none; } }
+  </style>
+  <rect x="0.5" y="0.5" width="419" height="194" rx="10" fill="#f6f8fa" stroke="#d1d9e0"/>
+  <path class="chevron" d="M24 27.5l5 4.5-5 4.5"/>
+  <text x="38" y="37" class="prompt">git stats --all</text>
+  <g class="fade" style="animation-delay:0.10s"><text x="24" y="76" class="label">commits</text><line x1="92.8" y1="72" x2="214.8" y2="72" class="leader"/><text x="250" y="76" class="value" text-anchor="end">348</text></g>
+  <g class="fade" style="animation-delay:0.20s"><text x="24" y="104" class="label">pulls</text><line x1="76.0" y1="100" x2="231.6" y2="100" class="leader"/><text x="250" y="104" class="value" text-anchor="end">1</text></g>
+  <g class="fade" style="animation-delay:0.30s"><text x="24" y="132" class="label">repos</text><line x1="76.0" y1="128" x2="231.6" y2="128" class="leader"/><text x="250" y="132" class="value" text-anchor="end">8</text></g>
+  <g class="fade" style="animation-delay:0.40s"><text x="24" y="160" class="label">since</text><line x1="76.0" y1="156" x2="206.4" y2="156" class="leader"/><text x="250" y="160" class="value" text-anchor="end">2021</text></g>
+  <line x1="280.5" y1="60" x2="280.5" y2="168" class="divider"/>
+  <g class="fade" style="animation-delay:0.50s"><text x="300" y="112" class="big accent">339</text><text x="300" y="138" class="muted">contributions</text><text x="300" y="156" class="muted">in 2026</text></g>
+</svg>
